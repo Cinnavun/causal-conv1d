@@ -179,6 +179,7 @@ if not SKIP_CUDA_BUILD:
                     f"{PACKAGE_NAME} is only supported on CUDA 11.6 and above.  "
                     "Note: make sure nvcc has a supported version by running nvcc -V."
                 )
+<<<<<<< Updated upstream
 
         # Allow overriding CUDA architectures via TORCH_CUDA_ARCH_LIST
         # (standard PyTorch convention, used by flash-attention, xformers, etc.)
@@ -195,6 +196,11 @@ if not SKIP_CUDA_BUILD:
                 cc_flag.append("-gencode")
                 cc_flag.append(f"arch=compute_{cc},code=sm_{cc}")
         else:
+=======
+        cc_flag.append("-gencode")
+        cc_flag.append("arch=compute_89,code=sm_89")  #Choose your own graphics card architecture for compilation to reduce compilation time and file size
+        '''  if bare_metal_version <= Version("12.9"):
+>>>>>>> Stashed changes
             cc_flag.append("-gencode")
             cc_flag.append("arch=compute_75,code=sm_75")
             cc_flag.append("-gencode")

@@ -41,3 +41,45 @@ If you are on ROCm 6.0, run the following steps to avoid errors during compilati
    ```bash
     patch /opt/rocm/include/hip/amd_detail/amd_hip_bf16.h < rocm_patch/rocm6_0.patch 
    ```
+<<<<<<< Updated upstream
+=======
+# causal_conv1d is installed on Windows (compiles itself on MSVC)
+# Compile yourself on Windows (MSVC)
+## 1. Create a compilation environment:
+    Download Windows 11/10 SDK using Visual Studio and download the MSVC compiler
+    Configure environment variables
+    Install dependent ninja
+## 2.  Adapted to causal-conv1d source code
+
+    clone This project modifies the setup.py
+        
+        "``python
+        cc_flag.append("-gencode")
+        cc_flag.append("arch=compute_89,code=sm_89") #Select your own graphics card architecture for compilation, reducing compilation time and generated file size
+        ```
+
+    ### If it is an AMD graphics card, you need to
+    1. causal-conv1d\csrc\causal_conv1d.cpp 
+    2. causal-conv1d\csrc\causal_conv1d_fwd.cu
+    3. causal-conv1d\csrc\causal_conv1d_bwd.cu
+    4. causal-conv1d\csrc\causal_conv1d_common.h 
+    Middle
+        #ifndef USE_ROCM
+        æse
+        #endif
+    Change to keep the code of else
+## 3.  Compile code
+    使用x64 Native Tools Command Prompt for VS 2022
+    Go under Project
+    # 1.  Tell the compiler that we want to use the SDK
+    set DISTUTICS_USE_SDK=1
+
+    # 2.  Limit compilation to only 1 thread, although it is slower but will not burst memory
+    set MAX_JOBS=1
+
+
+    # 3.  Officially start installation
+    pip install . --no-build-isolation
+
+Recommended pr:[text](https://github.com/Dao-AILab/causal-conv1d/pull/93)
+>>>>>>> Stashed changes

@@ -16,6 +16,7 @@
     {
         return std::max(ilist);
     }
+<<<<<<< Updated upstream
 
     template<typename T>
     constexpr T constexpr_min(T a, T b) {
@@ -24,6 +25,16 @@
 
 #else
     #include <hip/hip_bf16.h>
+=======
+
+    template<typename T>
+    constexpr T constexpr_min(T a, T b) {
+        return std::min(a, b);
+    }
+/*
+    #else
+        #include <hip/hip_bf16.h>
+>>>>>>> Stashed changes
 
     template<typename T>
     __device__ inline T shuffle_xor(T val, int offset) {
