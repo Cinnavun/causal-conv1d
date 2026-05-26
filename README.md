@@ -42,7 +42,10 @@ If you are on ROCm 6.0, run the following steps to avoid errors during compilati
     patch /opt/rocm/include/hip/amd_detail/amd_hip_bf16.h < rocm_patch/rocm6_0.patch 
    ```
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 # causal_conv1d is installed on Windows (compiles itself on MSVC)
 # Compile yourself on Windows (MSVC)
 ## 1. Create a compilation environment:
@@ -81,5 +84,9 @@ If you are on ROCm 6.0, run the following steps to avoid errors during compilati
     # 3.  Officially start installation
     pip install . --no-build-isolation
 
+<<<<<<< Updated upstream
+Recommended pr:[text](https://github.com/Dao-AILab/causal-conv1d/pull/93)
+>>>>>>> Stashed changes
+=======
 Recommended pr:[text](https://github.com/Dao-AILab/causal-conv1d/pull/93)
 >>>>>>> Stashed changes

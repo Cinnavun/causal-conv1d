@@ -17,6 +17,7 @@
         return std::max(ilist);
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
     template<typename T>
     constexpr T constexpr_min(T a, T b) {
@@ -27,6 +28,9 @@
     #include <hip/hip_bf16.h>
 =======
 
+=======
+
+>>>>>>> Stashed changes
     template<typename T>
     constexpr T constexpr_min(T a, T b) {
         return std::min(a, b);
@@ -34,6 +38,9 @@
 /*
     #else
         #include <hip/hip_bf16.h>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     template<typename T>
