@@ -4,3 +4,4 @@ build/
 **.so
 *.hip
 *_hip.*
+causal-conv1d.code-workspace
