@@ -36,8 +36,11 @@ with open("README.md", "r", encoding="utf-8") as fh:
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
 PACKAGE_NAME = "causal_conv1d"
-TORCH_TARGET_VERSION = "0x020a000000000000"
-PY_LIMITED_API_TAG = f"cp{(int(min_supported_cpython, 16) >> 24) & 0xFF}{(int(min_supported_cpython, 16) >> 16) & 0xFF}"
+
+#TORCH_TARGET_VERSION = "0x020d000000000000"
+
+#PY_LIMITED_API_TAG = f"cp{(int(min_supported_cpython, 16) >> 24) & 0xFF}{(int(min_supported_cpython, 16) >> 16) & 0xFF}"
+
 PYTHON_REQUIRES_TAG = f">={(int(min_supported_cpython, 16) >> 24) & 0xFF}.{(int(min_supported_cpython, 16) >> 16) & 0xFF}"
 
 BASE_WHEEL_URL = "https://github.com/Dao-AILab/causal-conv1d/releases/download/{tag_name}/{wheel_name}"
@@ -176,10 +179,9 @@ if not SKIP_CUDA_BUILD:
             _, bare_metal_version = get_cuda_bare_metal_version(CUDA_HOME)
             if bare_metal_version < Version("11.6"):
                 raise RuntimeError(
-                    f"{PACKAGE_NAME} is only supported on CUDA 11.6 and above.  "
-                    "Note: make sure nvcc has a supported version by running nvcc -V."
+                      f"{PACKAGE_NAME} is only supported on CUDA 11.6 and above.  "
+                      "Note: make sure nvcc has a supported version by running nvcc -V."
                 )
-<<<<<<< Updated upstream
 
         # Allow overriding CUDA architectures via TORCH_CUDA_ARCH_LIST
         # (standard PyTorch convention, used by flash-attention, xformers, etc.)
@@ -195,18 +197,16 @@ if not SKIP_CUDA_BUILD:
                 cc = f"{major}{minor}"
                 cc_flag.append("-gencode")
                 cc_flag.append(f"arch=compute_{cc},code=sm_{cc}")
-        else:
-=======
-        cc_flag.append("-gencode")
-        cc_flag.append("arch=compute_89,code=sm_89")  #Choose your own graphics card architecture for compilation to reduce compilation time and file size
-        '''  if bare_metal_version <= Version("12.9"):
->>>>>>> Stashed changes
-            cc_flag.append("-gencode")
-            cc_flag.append("arch=compute_75,code=sm_75")
-            cc_flag.append("-gencode")
-            cc_flag.append("arch=compute_80,code=sm_80")
-            cc_flag.append("-gencode")
-            cc_flag.append("arch=compute_87,code=sm_87")
+            else:
+                cc_flag.append("-gencode")
+                cc_flag.append("arch=compute_86,code=sm_86")  #Choose your own graphics card architecture
+            if bare_metal_version <= Version("12.9"):
+                cc_flag.append("-gencode")
+                cc_flag.append("arch=compute_75,code=sm_75")
+                cc_flag.append("-gencode")
+                cc_flag.append("arch=compute_80,code=sm_80")
+                cc_flag.append("-gencode")
+                cc_flag.append("arch=compute_87,code=sm_87")
             if bare_metal_version >= Version("11.8"):
                 cc_flag.append("-gencode")
                 cc_flag.append("arch=compute_90,code=sm_90")
@@ -231,11 +231,11 @@ if not SKIP_CUDA_BUILD:
 
     if HIP_BUILD:
         extra_compile_args = {
-            "cxx": ["-O3", "-std=c++17", f"-DTORCH_TARGET_VERSION={TORCH_TARGET_VERSION}"],
+            "cxx": ["-O3", "-std=c++17", f"-DTORCH_TARGET_VERSION={0x020c000000000000}"],
             "nvcc": [
                 "-O3",
                 "-std=c++17",
-                f"-DTORCH_TARGET_VERSION={TORCH_TARGET_VERSION}",
+                f"-DTORCH_TARGET_VERSION={0x020c000000000000}",
                 f"--offload-arch={os.getenv('HIP_ARCHITECTURES', 'native')}",
                 "-U__CUDA_NO_HALF_OPERATORS__",
                 "-U__CUDA_NO_HALF_CONVERSIONS__",
@@ -245,13 +245,13 @@ if not SKIP_CUDA_BUILD:
         }
     else:
         extra_compile_args = {
-            "cxx": ["-O3", "-std=c++17", "-DUSE_CUDA", f"-DTORCH_TARGET_VERSION={TORCH_TARGET_VERSION}"],
+            "cxx": ["-O3", "-std=c++17", "-DUSE_CUDA", f"-DTORCH_TARGET_VERSION={0x020c000000000000}"],
             "nvcc": append_nvcc_threads(
                 [
                     "-O3",
                     "-std=c++17",
                     "-DUSE_CUDA",
-                    f"-DTORCH_TARGET_VERSION={TORCH_TARGET_VERSION}",
+                    f"-DTORCH_TARGET_VERSION={0x020c000000000000}",
                     "-U__CUDA_NO_HALF_OPERATORS__",
                     "-U__CUDA_NO_HALF_CONVERSIONS__",
                     "-U__CUDA_NO_BFLOAT16_OPERATORS__",
@@ -308,19 +308,19 @@ def get_wheel_url():
         hip_version = f"{torch_hip_version.major}{torch_hip_version.minor}"
     else:
         # We're using the CUDA version used to build torch, not the one currently installed
-        # _, cuda_version_raw = get_cuda_bare_metal_version(CUDA_HOME)
-        torch_cuda_version = parse(torch.version.cuda)
+         _, cuda_version_raw = get_cuda_bare_metal_version(CUDA_HOME)
+    torch_cuda_version = parse(torch.version.cuda)
         # For CUDA 11, we only compile for CUDA 11.8, and for CUDA 12 we only compile for CUDA 12.3
         # to save CI time. Minor versions should be compatible.
-        if torch_cuda_version.major == 11:
+    if torch_cuda_version.major == 11:
             torch_cuda_version = parse("11.8")
-        elif torch_cuda_version.major == 12:
+    elif torch_cuda_version.major == 12:
             torch_cuda_version = parse("12.3")
-        elif torch_cuda_version.major == 13:
+    elif torch_cuda_version.major == 13:
             torch_cuda_version = parse("13.0")
-        else:
+    else:
             raise ValueError(f"CUDA version {torch_cuda_version} not supported")
-        cuda_version = f"{torch_cuda_version.major}"
+    cuda_version = f"{torch_cuda_version.major}"
 
     gpu_compute_version = hip_version if HIP_BUILD else cuda_version
     cuda_or_hip = "hip" if HIP_BUILD else "cu"
@@ -338,21 +338,12 @@ def get_wheel_url():
 
     # Determine wheel URL based on CUDA version, torch version, python version and OS
     wheel_filename = f"{PACKAGE_NAME}-{causal_conv1d_version}+{cuda_or_hip}{gpu_compute_version}torch{torch_version}cxx11abi{cxx11_abi}-{python_version}-{python_version}-{platform_name}.whl"
-
     wheel_url = BASE_WHEEL_URL.format(
         tag_name=f"v{causal_conv1d_version}", wheel_name=wheel_filename
     )
     return wheel_url, wheel_filename
 
-
 class CachedWheelsCommand(_bdist_wheel):
-    """
-    The CachedWheelsCommand plugs into the default bdist wheel, which is ran by pip when it cannot
-    find an existing wheel (which is currently the case for all installs). We use
-    the environment parameters to detect whether there is already a pre-built version of a compatible
-    wheel available and short-circuits the standard full build pipeline.
-    """
-
     def run(self):
         if FORCE_BUILD:
             return super().run()
@@ -407,16 +398,14 @@ setup(
         "Operating System :: Unix",
     ],
     ext_modules=ext_modules,
-    cmdclass={"bdist_wheel": CachedWheelsCommand, "build_ext": BuildExtension}
-    if ext_modules
-    else {
-        "bdist_wheel": CachedWheelsCommand,
-    },
+   cmdclass={"build_ext": BuildExtension} if ext_modules else {},
+
     python_requires=PYTHON_REQUIRES_TAG,
     install_requires=[
         "torch",
         "packaging",
         "ninja",
+        "wheel",
     ],
-    options={"bdist_wheel": {"py_limited_api": PY_LIMITED_API_TAG}},
+    #options={"bdist_wheel": {"py_limited_api": PY_LIMITED_API_TAG}},
 )
