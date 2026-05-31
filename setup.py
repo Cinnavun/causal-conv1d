@@ -306,21 +306,22 @@ def get_wheel_url():
         # We're using the HIP version used to build torch, not the one currently installed
         torch_hip_version = get_torch_hip_version()
         hip_version = f"{torch_hip_version.major}{torch_hip_version.minor}"
+        cuda_version = None
     else:
         # We're using the CUDA version used to build torch, not the one currently installed
-         _, cuda_version_raw = get_cuda_bare_metal_version(CUDA_HOME)
-    torch_cuda_version = parse(torch.version.cuda)
+        _, cuda_version_raw = get_cuda_bare_metal_version(CUDA_HOME)
+        torch_cuda_version = parse(torch.version.cuda)
         # For CUDA 11, we only compile for CUDA 11.8, and for CUDA 12 we only compile for CUDA 12.3
         # to save CI time. Minor versions should be compatible.
-    if torch_cuda_version.major == 11:
+        if torch_cuda_version.major == 11:
             torch_cuda_version = parse("11.8")
-    elif torch_cuda_version.major == 12:
+        elif torch_cuda_version.major == 12:
             torch_cuda_version = parse("12.3")
-    elif torch_cuda_version.major == 13:
+        elif torch_cuda_version.major == 13:
             torch_cuda_version = parse("13.0")
-    else:
+        else:
             raise ValueError(f"CUDA version {torch_cuda_version} not supported")
-    cuda_version = f"{torch_cuda_version.major}"
+        cuda_version = f"{torch_cuda_version.major}"
 
     gpu_compute_version = hip_version if HIP_BUILD else cuda_version
     cuda_or_hip = "hip" if HIP_BUILD else "cu"
