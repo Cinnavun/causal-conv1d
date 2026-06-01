@@ -4,9 +4,8 @@
 
 #pragma once
 
-// #ifndef USE_ROCM
-#include <cuda_bf16.h>
-
+//#ifndef USE_ROCM
+    #include <cuda_bf16.h>
 template <typename T>
 __device__ inline T shuffle_xor(T val, int offset)
 {
@@ -40,7 +39,7 @@ constexpr T constexpr_min(T a, T b)
     constexpr T constexpr_min(T a, T b) {
         return a < b ? a : b;
     }
-#endif
+#endif*/
 #include <cuda_fp16.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
